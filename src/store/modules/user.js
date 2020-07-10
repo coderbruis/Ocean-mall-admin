@@ -3,8 +3,8 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
-  token: getToken(),
-  // nginx: access_token: getToken(),
+  // token: getToken(),
+  access_token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
@@ -14,7 +14,7 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     // nginx: state.access_token = token
-    state.token = token
+    state.access_token = token
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -38,15 +38,13 @@ const actions = {
     // Promise异步编程
     return new Promise((resolve, reject) => {
       // 调用api/user.js的login方法，去调用http的post请求
-      // nginx: login({ username: username.trim(), password: password, grant_type: 'password' }).then(response => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        /* nginx
+      login({ username: username.trim(), password: password, grant_type: 'password' }).then(response => {
+      // login({ username: username.trim(), password: password }).then(response => {
+        // const { data } = response
         commit('SET_TOKEN', response.access_token)
         setToken(response.access_token)
-*/
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        // commit('SET_TOKEN', data.token)
+        // setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -57,25 +55,24 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
+      getInfo(state.access_token).then(response => {
+        if (!response) {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { roles, name, avatar, introduction } = response
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
+        debugger
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
-        resolve(data)
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
@@ -85,7 +82,7 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      logout(state.access_token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()
