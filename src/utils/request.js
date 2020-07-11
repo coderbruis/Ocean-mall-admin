@@ -16,6 +16,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     // for oauth/token
+    debugger
     if (config.url.indexOf('oauth/token') !== -1) {
       // 将入参转化为form-data格式
       config.data = qs.stringify(config.data)

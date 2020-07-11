@@ -54,6 +54,7 @@ export const constantRoutes = [
 ]
 
 /**
+ * 根据权限加载的路由
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
@@ -85,6 +86,22 @@ export const asyncRoutes = [
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true },
+
+  {
+    path: '/table',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: { title: 'TableExample', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'demo1',
+        name: 'TableDemo1',
+        component: () => import('@/views/table/index'),
+        meta: { title: 'TableDemo1', icon: 'table' }
+      }
+    ]
+  },
+
   {
     path: '/product',
     component: Layout,
