@@ -54,25 +54,26 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
+    debugger
     return new Promise((resolve, reject) => {
       getInfo(state.access_token).then(response => {
+        const { data } = response.data
         if (!response) {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = response
+        const { roles, name, avatar, introduction } = data
 
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
-        debugger
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', introduction)
-        resolve(response)
+        resolve(data)
       }).catch(error => {
         reject(error)
       })

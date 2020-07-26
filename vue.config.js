@@ -41,9 +41,14 @@ module.exports = {
     // 配置nginx代理
     proxy: {
       '/api': {
-        target: 'http://www.distributed_mall.cn',
+        target: 'http://www.distributed_mall_oauth.cn',
         changeOrigin: true,
         pathRewrite: { '^/api': '/' }
+      },
+      '/oauth': {
+        target: 'http://www.distributed_mall_gateway.cn',
+        changeOrigin: true,
+        pathRewrite: { '^/oauth': '/' }
       },
       '/dev-api/vue-element-admin/': {
         target: 'http://localhost:9527'

@@ -102,13 +102,43 @@ export const asyncRoutes = [
     ]
   },
 
+  // 用户管理
+  {
+    path: '/user-privileage',
+    component: Layout,
+    redirect: 'noRedirect',
+    meta: {
+      title: '权限管理', icon: 'warning'
+    },
+    children: [
+      {
+        path: 'user-mgr',
+        name: '用户管理',
+        component: () => import('@/views/user-privileage/user-mgr/index'),
+        meta: {
+          title: '用户管理',
+          icon: 'user-admin'
+        }
+      },
+      {
+        path: 'role-mgr',
+        name: '角色管理',
+        component: () => import('@/views/user-privileage/role-mgr/index'),
+        meta: {
+          title: '角色管理',
+          icon: 'ums-role'
+        }
+      }
+    ]
+  },
+
   {
     path: '/product',
     component: Layout,
     // redirect: '/product/create',
     name: '商品管理',
     redirect: 'noRedirect',
-    meta: { title: '商品管理', icon: 'documentation' },
+    meta: { title: '商品管理', icon: 'el-icon-warning' },
     children: [
       {
         path: 'create',

@@ -16,11 +16,10 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     // for oauth/token
-    debugger
     if (config.url.indexOf('oauth/token') !== -1) {
       // 将入参转化为form-data格式
       config.data = qs.stringify(config.data)
-      config.headers['Authorization'] = 'Basic YnJ1aXM6MTIzNDU2'
+      config.headers['Authorization'] = 'Basic Y2xpZW50OnNlY3JldA=='
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     }
 
@@ -66,8 +65,8 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      // 30008: Illegal token; 30012: Other clients logged in; 30014: Token expired;
+      if (res.code === 30008 || res.code === 30012 || res.code === 30014) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
