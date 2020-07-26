@@ -49,9 +49,7 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    debugger
     return new Promise(resolve => {
-      debugger
       let accessedRoutes
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
