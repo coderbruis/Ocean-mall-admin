@@ -46,8 +46,22 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        name: '首页',
+        meta: { title: '首页', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    redirect: '/profile/index',
+    hidden: true,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
   }
@@ -65,20 +79,20 @@ export const asyncRoutes = [
     redirect: 'noRedirect',
     name: 'ErrorPages',
     meta: {
-      title: 'Error Pages',
+      title: '错误页面',
       icon: '404'
     },
     children: [
       {
         path: '401',
         component: () => import('@/views/error-page/401'),
-        name: 'Page401',
+        name: '401错误页',
         meta: { title: '401', noCache: true }
       },
       {
         path: '404',
         component: () => import('@/views/error-page/404'),
-        name: 'Page404',
+        name: '404错误页',
         meta: { title: '404', noCache: true }
       }
     ]
@@ -95,9 +109,9 @@ export const asyncRoutes = [
     children: [
       {
         path: 'demo1',
-        name: 'TableDemo1',
+        name: '表格测试',
         component: () => import('@/views/table/index'),
-        meta: { title: 'TableDemo1', icon: 'table' }
+        meta: { title: '表格测试', icon: 'table' }
       }
     ]
   },

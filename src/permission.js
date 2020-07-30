@@ -29,7 +29,8 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
-      // 判断用户是否有角色，并判断角色长度
+      // 判断用户是否有角色，并判断角色长度; 如果页面刷新，则getters里的数据会被清空；
+      // hasRoles用于路由跳转时判断是否已经登录过;
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
         next()
