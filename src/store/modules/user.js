@@ -3,8 +3,10 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
-  // token: getToken(),
-  access_token: getToken(),
+  // 前端
+  token: getToken(),
+  // 后端
+  // access_token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
@@ -13,8 +15,9 @@ const state = {
 
 const mutations = {
   SET_TOKEN: (state, token) => {
-    // nginx: state.access_token = token
-    state.access_token = token
+    // 后端
+    // state.access_token = token
+    state.token = token
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -38,13 +41,16 @@ const actions = {
     // Promise异步编程
     return new Promise((resolve, reject) => {
       // 调用api/user.js的login方法，去调用http的post请求
-      login({ username: username.trim(), password: password, grant_type: 'password' }).then(response => {
-      // login({ username: username.trim(), password: password }).then(response => {
-        // const { data } = response
-        commit('SET_TOKEN', response.access_token)
-        setToken(response.access_token)
-        // commit('SET_TOKEN', data.token)
-        // setToken(data.token)
+      // login({ username: username.trim(), password: password, grant_type: 'password' }).then(response => {
+      login({ username: username.trim(), password: password }).then(response => {
+        // 前端mock
+        const { data } = response
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
+
+        // 后端
+        // commit('SET_TOKEN', response.access_token)
+        // setToken(response.access_token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -55,7 +61,10 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.access_token).then(response => {
+      // 后端
+      // getInfo(state.access_token).then(response => {
+      getInfo(state.token).then(response => {
+        debugger
         const { data } = response
         if (!response) {
           reject('Verification failed, please Login again.')
@@ -82,7 +91,9 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.access_token).then(() => {
+      // 后端
+      // logout(state.access_token).then(() => {
+      logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
         removeToken()

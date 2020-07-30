@@ -2,7 +2,8 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/oauth/oauth/token',
+    // url: '/oauth/oauth/token',
+    url: '/vue-element-admin/user/login',
     method: 'post',
     data
   })
@@ -10,7 +11,8 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/api/user/currentUser',
+    // url: '/api/user/currentUser',
+    url: '/vue-element-admin/user/info',
     method: 'get',
     params: { token }
   })

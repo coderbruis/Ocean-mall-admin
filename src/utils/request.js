@@ -15,13 +15,15 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    // for oauth/token
+    // 后端oauth/token
+    /*
     if (config.url.indexOf('oauth/token') !== -1) {
       // 将入参转化为form-data格式
       config.data = qs.stringify(config.data)
       config.headers['Authorization'] = 'Basic Y2xpZW50OnNlY3JldA=='
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     }
+*/
 
     // 如果vuex中存在token，则取出token
     if (store.getters.token) {
@@ -54,9 +56,13 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
+
+    // 后端
+    /*
     if (res.access_token !== undefined && res.access_token !== '') {
       return res
     }
+*/
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       Message({

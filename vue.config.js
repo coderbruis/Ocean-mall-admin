@@ -37,8 +37,9 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // before: require('./mock/mock-server.js'),
+    before: require('./mock/mock-server.js')
     // 配置nginx代理
+    /*
     proxy: {
       '/api': {
         target: 'http://www.distributed_mall_gateway.cn',
@@ -54,6 +55,7 @@ module.exports = {
         target: 'http://localhost:9527'
       }
     }
+*/
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
