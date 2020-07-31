@@ -24,3 +24,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getUsrMgrInfo(query) {
+  return request({
+    url: '/vue-element-admin/user-mgr/info',
+    method: 'get',
+    params: query
+  })
+}
+
+export function createUser(data) {
+  return request({
+    url: '/vue-element-admin/user/create',
+    method: 'post',
+    data
+  })
+}

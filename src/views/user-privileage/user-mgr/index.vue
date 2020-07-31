@@ -1,109 +1,115 @@
 <template>
   <div class="app-container">
     <!-- :data => v-bind:data -->
+    <!-- 按钮组 -->
+    <div class="filter-container">
+      <el-input v-model="listQuery.name" placeholder="名字" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate" >
+        添加
+      </el-button>
+    </div>
     <el-table
+      :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      element-loading-text="Loading"
       border
       fit
       highlight-current-row
+      style="width: 100%;"
+      @sort-change="sortChange"
     >
       <!-- slot-scope表示的是插槽作用域，scope就是表示新copy的table数据的副本scope，所以直接可以通过scope.$index获取数据的索引，scope.row获取
        表格数据的row数据。-->
-      <el-table-column align="center" label="编号" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
+      <!--<el-table-column align="center" label="编号" width="95" sortable="custom" :class-name="getSortClass('id')">-->
+      <el-table-column align="center" label="序号" prop="id" width="95" sortable="custom" :class-name="getSortClass('id')">
+        <template slot-scope="{row}">
+          {{ row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="标题">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
+      <el-table-column label="姓名">
+        <template slot-scope="{row}">
+          {{ row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+      <el-table-column label="电话" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="预览数" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+      <el-table-column label="邮箱" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+      <el-table-column label="介绍" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.introduction }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
+      <el-table-column class-name="status-col" label="状态" align="center">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">{{ row.status | statusValueFilter }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="最后登录时间">
+        <template slot-scope="{row}">
           <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ row.lastlogintime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
-          </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
+            编辑
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            Delete
+            删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <!-- pagination -->
-    <el-pagination
-      background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[100, 200, 300, 400]"
-      :page-size="100"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
-    </el-pagination>
+
+    <!-- 分页组件 -->
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
 
     <!-- 模态框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="temp.name" />
         </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="temp.phone" />
         </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="temp.email" />
         </el-form-item>
-        <el-form-item label="Status">
+<!--
+        <el-form-item label="Password" prop="password">
+          <el-input v-model="temp.password" />
+        </el-form-item>
+-->
+        <el-form-item label="时间" prop="lastlogintime">
+          <el-date-picker v-model="temp.lastlogintime" type="datetime" placeholder="选择时间" />
+        </el-form-item>
+        <el-form-item label="状态">
           <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
             <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="个人介绍">
+          <el-input v-model="temp.introduction" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请输入" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
-          Cancel
+          取消
         </el-button>
-        <!-- <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()"> -->
         <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          Confirm
+          确认
         </el-button>
       </div>
     </el-dialog>
@@ -113,6 +119,10 @@
 
 <script>
 
+import { getUsrMgrInfo, createUser } from '@/api/user'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import waves from '@/directive/waves' // waves directive
+
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
@@ -121,21 +131,46 @@ const calendarTypeOptions = [
 ]
 
 export default {
+  name: 'UserMgr',
+  components: {
+    Pagination
+  },
+  directives: {
+    waves
+  },
   filters: {
+    // 状态过滤器
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
+        normal: 'success',
+        blocked: 'gray',
+        forbidden: 'danger'
       }
       return statusMap[status]
+    },
+    // 状态值过滤器
+    statusValueFilter(status) {
+      const statusValueMap = {
+        normal: '正常',
+        blocked: '锁定',
+        forbidden: '禁用'
+      }
+      return statusValueMap[status]
     }
   },
   data() {
     return {
+      tableKey: 0,
       list: null,
       listLoading: true,
       currentPage4: 2,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 20,
+        sort: '+id',
+        name: undefined
+      },
       // 模态框标题
       textMap: {
         update: '更新',
@@ -147,63 +182,115 @@ export default {
       dialogStatus: '',
       rules: {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
+        lastlogintime: [{ type: 'date', required: true, message: 'lastlogintime is required', trigger: 'change' }],
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
       // 模态框默认数据
       temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
+        name: '',
+        phone: '',
+        email: '',
+        lastLoginTime: new Date(),
+        introduction: '',
+        status: 'normal'
       },
       calendarTypeOptions,
-      statusOptions: ['published', 'draft', 'deleted']
+      statusOptions: ['normal', 'blocked', 'forbidden']
     }
   },
   created() {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    fetchData() {
+    getList() {
       this.listLoading = true
-      this.list = [
-        {
-          id: '1',
-          title: 'a',
-          status: 'published',
-          author: 'bruis',
-          display_time: '1991-02-25 16:38',
-          pageviews: 300
-        }
-      ]
-      this.listLoading = false
-      /*
-      getList().then(response => {
+      getUsrMgrInfo(this.listQuery).then(response => {
         this.list = response.data.items
-        this.listLoading = false
+        this.total = response.data.total
+
+        // 模拟请求时间
+        setTimeout(() => {
+          this.listLoading = false
+        }, 0.5 * 1000)
       })
-*/
     },
-    handleSizeChange(newSize) {
-      console.log(`每页 ${newSize} 条`)
-    },
-    handleCurrentChange(newPage) {
-      console.log(`当前页: ${newPage}`)
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
+      this.temp.lastlogintime = new Date(this.temp.lastlogintime)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       // 涉及到Vue中DOM的异步更新
       this.$nextTick(() => {
+        // 清除表单的内容
         this.$refs['dataForm'].clearValidate()
       })
+    },
+    handleCreate() {
+      this.resetTmp()
+      this.dialogStatus = 'create'
+      // 显示模态框
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    // 重置模态框架数据
+    resetTmp() {
+      this.temp = {
+        name: '',
+        phone: '',
+        email: '',
+        lastLoginTime: new Date(),
+        introduction: '',
+        status: 'normal'
+      }
+    },
+    createData() {
+      // 校验
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          this.temp.id = parseInt(Math.random() * 100) + 1024
+          createUser(this.temp).then(() => {
+            this.list.unshift(this.temp)
+            this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message: '创建用户成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
+      }
+    },
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
+    },
+    getSortClass: function(key) {
+      const sort = this.listQuery.sort
+      console.log(sort === `+${key}`)
+      return sort === `+${key}` ? 'ascending' : 'descending'
     }
   }
 }
 </script>
+<style>
+  .el-table th.gutter{
+    display: table-cell!important;
+  }
+</style>

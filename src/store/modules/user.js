@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, getUsrMgrInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -64,7 +64,6 @@ const actions = {
       // 后端
       // getInfo(state.access_token).then(response => {
       getInfo(state.token).then(response => {
-        debugger
         const { data } = response
         if (!response) {
           reject('Verification failed, please Login again.')
@@ -138,6 +137,17 @@ const actions = {
 
     // reset visited views and cached views
     dispatch('tagsView/delAllViews', null, { root: true })
+  },
+
+  getUsrMgrInfo() {
+    return new Promise((resolve, reject) => {
+      getUsrMgrInfo().then(response => {
+        // const { data } = response
+
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }
 

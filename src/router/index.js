@@ -122,15 +122,15 @@ export const asyncRoutes = [
     component: Layout,
     redirect: 'noRedirect',
     meta: {
-      title: '权限管理', icon: 'warning'
+      title: '用户管理', icon: 'peoples'
     },
     children: [
       {
         path: 'user-mgr',
-        name: '用户管理',
+        name: '信息管理',
         component: () => import('@/views/user-privileage/user-mgr/index'),
         meta: {
-          title: '用户管理',
+          title: '信息管理',
           icon: 'user-admin'
         }
       },
@@ -152,7 +152,7 @@ export const asyncRoutes = [
     // redirect: '/product/create',
     name: '商品管理',
     redirect: 'noRedirect',
-    meta: { title: '商品管理', icon: 'el-icon-warning' },
+    meta: { title: '商品管理', icon: 'shopping' },
     children: [
       {
         path: 'create',

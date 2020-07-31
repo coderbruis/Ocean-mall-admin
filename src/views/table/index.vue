@@ -16,19 +16,24 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="标题">
+      <el-table-column label="姓名" width="100">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column label="作者" width="110" align="center">
+      <el-table-column label="邮箱" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="预览数" width="110" align="center">
+      <el-table-column label="电话" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          {{ scope.row.phone }}
+        </template>
+      </el-table-column>
+      <el-table-column label="介绍" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.introduction }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="Status" width="110" align="center">
@@ -36,13 +41,13 @@
           <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column align="center" prop="created_at" label="最后登录时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.lastlogintime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             Edit
@@ -59,17 +64,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- pagination -->
     <el-pagination
       background
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
       :current-page="currentPage4"
       :page-sizes="[100, 200, 300, 400]"
       :page-size="100"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="400">
-    </el-pagination>
+      :total=total
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
 
     <!-- 模态框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -113,6 +117,8 @@
 
 <script>
 
+import { getUsrMgrInfo } from '@/api/user'
+
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
@@ -135,6 +141,7 @@ export default {
     return {
       list: null,
       listLoading: true,
+      total: 0,
       currentPage4: 2,
       // 模态框标题
       textMap: {
@@ -170,6 +177,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
+      /*
       this.list = [
         {
           id: '1',
@@ -181,12 +189,14 @@ export default {
         }
       ]
       this.listLoading = false
-      /*
-      getList().then(response => {
-        this.list = response.data.items
+*/
+      getUsrMgrInfo().then(response => {
+        const { data } = response
+        // this.list = response.data.items
+        this.list = data.items
+        this.total = data.total
         this.listLoading = false
       })
-*/
     },
     handleSizeChange(newSize) {
       console.log(`每页 ${newSize} 条`)

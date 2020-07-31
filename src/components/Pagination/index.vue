@@ -1,3 +1,4 @@
+<!-- 公共组件，提出来 -->
 <template>
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
@@ -74,13 +75,16 @@ export default {
     }
   },
   methods: {
+    // 改变大小
     handleSizeChange(val) {
       this.$emit('pagination', { page: this.currentPage, limit: val })
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
     },
+    // 改变当前页数
     handleCurrentChange(val) {
+      // emit调用pagination
       this.$emit('pagination', { page: val, limit: this.pageSize })
       if (this.autoScroll) {
         scrollTo(0, 800)
