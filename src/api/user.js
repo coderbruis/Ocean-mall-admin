@@ -40,3 +40,11 @@ export function createUser(data) {
     data
   })
 }
+
+export function updateUser(data) {
+  return request({
+    url: '/vue-element-admin/user/update',
+    method: 'post',
+    data
+  })
+}

@@ -119,9 +119,9 @@
 
 <script>
 
-import { getUsrMgrInfo, createUser } from '@/api/user'
+import { getUsrMgrInfo, createUser, updateUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import waves from '@/directive/waves' // waves directive
+import waves from '@/directive/waves'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -218,6 +218,15 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
+    handleDelete(row, index) {
+      this.$notify({
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
+        duration: 2000
+      });
+      this.list.splice(index, 1)
+    },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       this.temp.lastlogintime = new Date(this.temp.lastlogintime)
@@ -260,6 +269,27 @@ export default {
             this.$notify({
               title: '成功',
               message: '创建用户成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    updateData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          const tempData = Object.assign({}, this.temp)
+          tempData.lastLoginTime = +new Date(tempData.lastLoginTime)
+          updateUser(tempData).then((response) => {
+            console.log(response)
+            const index = this.list.findIndex(v => v.id === this.temp.id)
+            this.list.splice(index, 1, this.temp)
+            this.dialogFormVisible = false
+            // 通知提示
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
               type: 'success',
               duration: 2000
             })

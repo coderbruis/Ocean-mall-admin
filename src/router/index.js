@@ -47,7 +47,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: '首页',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: {title: '首页', icon: 'dashboard', affix: true}
       }
     ]
   },
@@ -61,7 +61,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
+        meta: {title: 'Profile', icon: 'user', noCache: true}
       }
     ]
   }
@@ -87,31 +87,31 @@ export const asyncRoutes = [
         path: '401',
         component: () => import('@/views/error-page/401'),
         name: '401错误页',
-        meta: { title: '401', noCache: true }
+        meta: {title: '401', noCache: true}
       },
       {
         path: '404',
         component: () => import('@/views/error-page/404'),
         name: '404错误页',
-        meta: { title: '404', noCache: true }
+        meta: {title: '404', noCache: true}
       }
     ]
   },
 
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
+  {path: '*', redirect: '/404', hidden: true},
 
   {
     path: '/table',
     component: Layout,
     redirect: 'noRedirect',
-    meta: { title: 'TableExample', icon: 'el-icon-s-help' },
+    meta: {title: 'TableExample', icon: 'el-icon-s-help'},
     children: [
       {
         path: 'demo1',
         name: '表格测试',
         component: () => import('@/views/table/index'),
-        meta: { title: '表格测试', icon: 'table' }
+        meta: {title: '表格测试', icon: 'table'}
       }
     ]
   },
@@ -152,26 +152,57 @@ export const asyncRoutes = [
     // redirect: '/product/create',
     name: '商品管理',
     redirect: 'noRedirect',
-    meta: { title: '商品管理', icon: 'shopping' },
+    meta: {title: '商品管理', icon: 'shopping'},
     children: [
       {
         path: 'create',
         component: () => import('@/views/product/product'),
         name: 'PageCreate',
-        meta: { title: '商品创建', icon: 'edit', roles: ['admin'] }
+        meta: {title: '商品创建', icon: 'edit', roles: ['admin']}
       },
       {
         path: 'create2',
         component: () => import('@/views/product/product'),
-        meta: { title: '商品创建', icon: 'edit', roles: ['admin'] }
+        meta: {title: '商品创建', icon: 'edit', roles: ['admin']}
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    redirect: '/permission/index',
+    alwaysShow: true,
+    meta: {
+      title: '权限',
+      icon: 'lock'
+    },
+    children: [
+      {
+        path: 'role',
+        component: () => import('@/views/permission/role'),
+        name: '角色权限',
+        meta: {
+          title: '角色权限',
+          roles: ['admin']
+        }
       }
     ]
   }
+/*
+  {
+    path: 'role',
+    component: 'views/permission/role',
+    name: '角色权限',
+    meta: {
+      title: '角色权限',
+      roles: ['admin']
+    }
+  }*/
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
