@@ -3,6 +3,31 @@ const Mock = require('mockjs')
 const userList = []
 const count = 100
 
+const productList = []
+const productCount = 20
+
+for (let i = 0; i < count; i++) {
+  productList.push(Mock.mock({
+    id: i + 1,
+    productName: '商品' + (i + 1),
+    productImage: '',
+    price: 100,
+    stock: 10,
+    status: 'normal'
+  }))
+}
+
+for (let i = 0; i < productCount; i++) {
+  productList.push(Mock.mock({
+    id: i + 1,
+    productName: '商品' + (i + 1),
+    productImage: '',
+    price: 100,
+    stock: 10,
+    status: 'normal'
+  }))
+}
+
 const tokens = {
   admin: {
     token: 'admin-token'
@@ -187,6 +212,35 @@ module.exports = [
       return {
         code: 20000,
         data: 'success'
+      }
+    }
+  },
+  // ========================== product =======================
+  {
+    // get Products Info
+    url: '/vue-element-admin/product/info',
+    type: 'get',
+    response: config => {
+      const { page = 1, limit = 10, name, sort } = config.query
+      let mockList = productList.filter(item => {
+        if (name && item.name !== name) {
+          return false
+        }
+        return true
+      })
+
+      if (sort === '-id') {
+        mockList = mockList.reverse()
+      }
+
+      const productPageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+
+      return {
+        code: 20000,
+        data: {
+          total: mockList.length,
+          items: productPageList
+        }
       }
     }
   }

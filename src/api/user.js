@@ -48,3 +48,13 @@ export function updateUser(data) {
     data
   })
 }
+
+// ====================== product ====================
+
+export function getProductInfo(query) {
+  return request({
+    url: '/vue-element-admin/product/info',
+    method: 'get',
+    params: query
+  })
+}

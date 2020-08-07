@@ -35,7 +35,7 @@ export const constantRoutes = [
   },
   {
     path: '/create',
-    component: () => import('@/views/product/product'),
+    component: () => import('@/views/product/index'),
     hidden: true
   },
   {
@@ -145,25 +145,24 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: '/product',
     component: Layout,
-    // redirect: '/product/create',
     name: '商品管理',
     redirect: 'noRedirect',
-    meta: {title: '商品管理', icon: 'shopping'},
+    meta: { title: '商品管理', icon: 'shopping' },
     children: [
       {
         path: 'create',
-        component: () => import('@/views/product/product'),
-        name: 'PageCreate',
-        meta: {title: '商品创建', icon: 'edit', roles: ['admin']}
+        component: () => import('@/views/product/index'),
+        name: '商品信息',
+        meta: { title: '商品信息', roles: ['admin'] }
       },
       {
-        path: 'create2',
-        component: () => import('@/views/product/product'),
-        meta: {title: '商品创建', icon: 'edit', roles: ['admin']}
+        path: 'category',
+        component: () => import('@/views/product/category/index'),
+        name: '商品分类',
+        meta: { title: '商品分类', roles: ['admin'] }
       }
     ]
   },
