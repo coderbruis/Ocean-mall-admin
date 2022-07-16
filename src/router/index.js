@@ -54,7 +54,7 @@ export const constantRoutes = [
 ]
 
 /**
- * 根据权限加载的路由
+ * 根据权限加载的路由-菜单路由
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */

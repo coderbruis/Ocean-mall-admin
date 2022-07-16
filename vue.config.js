@@ -37,7 +37,8 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    // before: require('./mock/mock-server.js'),
+    // 开启mock？
+    before: require('./mock/mock-server.js'),
     // 配置nginx代理
     proxy: {
       '/api': {
@@ -51,6 +52,9 @@ module.exports = {
         pathRewrite: { '^/oauth': '/' }
       },
       '/dev-api/vue-element-admin/': {
+        target: 'http://localhost:9527'
+      },
+      '/dev-api': {
         target: 'http://localhost:9527'
       }
     }

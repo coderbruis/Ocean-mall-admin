@@ -35,7 +35,7 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
-          // 获取角色信息，角色信息是一个数组对象，例如['admin']或者是['debeloper','editor']
+          // 获取角色信息，角色hasToken信息是一个数组对象，例如['admin']或者是['debeloper','editor']
           const { roles } = await store.dispatch('user/getInfo')
 
           // generate accessible routes map based on roles

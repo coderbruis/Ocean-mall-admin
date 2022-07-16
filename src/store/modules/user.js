@@ -40,11 +40,13 @@ const actions = {
       // 调用api/user.js的login方法，去调用http的post请求
       login({ username: username.trim(), password: password, grant_type: 'password' }).then(response => {
       // login({ username: username.trim(), password: password }).then(response => {
-        // const { data } = response
-        commit('SET_TOKEN', response.access_token)
-        setToken(response.access_token)
-        // commit('SET_TOKEN', data.token)
-        // setToken(data.token)
+        const { data } = response
+        // commit('SET_TOKEN', response.access_token)
+        // setToken(response.access_token)
+
+        // mock
+        commit('SET_TOKEN', data.access_token)
+        setToken(data.access_token)
         resolve()
       }).catch(error => {
         reject(error)

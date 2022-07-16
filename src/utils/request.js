@@ -24,7 +24,7 @@ service.interceptors.request.use(
     }
 
     // 如果vuex中存在token，则取出token
-    if (store.getters.token) {
+    if (store.getters.access_token) {
     // let each request carry token
     // ['X-Token'] is a custom headers key
     // please modify it according to the actual situation

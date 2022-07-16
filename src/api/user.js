@@ -2,17 +2,21 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/oauth/oauth/token',
+    // mock
+    url: '/user/login',
+    // url: '/oauth/oauth/token',
     method: 'post',
     data
   })
 }
 
-export function getInfo(token) {
+export function getInfo(access_token) {
   return request({
-    url: '/api/order/currentUser',
+    // mock
+    url: '/user/info',
+    // url: '/api/order/currentUser',
     method: 'get',
-    params: { token }
+    params: { access_token }
   })
 }
 

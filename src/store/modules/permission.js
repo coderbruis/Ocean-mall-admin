@@ -50,10 +50,13 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
+      // 访问routers
       let accessedRoutes
+      // 如果是admin角色，不过滤路由
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {
+        // 根据角色权限过滤路由
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)
